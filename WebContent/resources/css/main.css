@@ -35,3 +35,6 @@ table.offers {
 	padding: 20px;
 	border: 1px solid gray;
 }
+p.error {
+	font-size:medium;
+}

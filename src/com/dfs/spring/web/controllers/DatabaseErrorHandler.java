@@ -9,6 +9,8 @@ public class DatabaseErrorHandler {
 
 	@ExceptionHandler(DataAccessException.class)
 	public String handleDatabaseException(DataAccessException ex) {
+		System.out.println("Database exception");
+		ex.printStackTrace();
 		return "error";
 	}
 }
