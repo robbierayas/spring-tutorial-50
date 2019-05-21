@@ -31,6 +31,28 @@ public class LoginController {
 	public String showLogin() {
 		return "login";
 	}
+	@RequestMapping("/denied")
+	public String showDenied() {
+		return "denied";
+	}
+	
+
+	@RequestMapping("/admin")
+	public String showAdmin(Model model) {
+//		try {
+			List<User> users = usersService.getAllUsers();
+			
+			model.addAttribute("users",users);
+//		}catch(Exception e) {
+//			System.out.println("Exception "+e.getClass());
+//		}
+		return "admin";
+	}
+
+	@RequestMapping("/loggedout")
+	public String showLoggedOut() {
+		return "loggedout";
+	}
 	
 	@RequestMapping("/newaccount")
 	public String showNewAccount(Model model) {
@@ -52,6 +74,8 @@ public class LoginController {
 			return "newaccount";
 		}
 		else {
+			user.setAuthority("ROLE_USER");
+			user.setEnabled(true);
 			System.out.println("Form validated");
 			if(usersService.exists(user.getUsername())) {
 				result.rejectValue("username", "DuplicateKey.user.username");

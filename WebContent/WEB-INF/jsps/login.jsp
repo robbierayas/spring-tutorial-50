@@ -18,7 +18,7 @@
 	<h3>Login with Username and Password</h3>
 	
 	<c:if test="${ param.error != null}">
-	<p class="eror">Login Failed</p>
+	<p class="eror">Login Failed  ${ param.error }</p>
 	</c:if>
 	<form name='f'
 		action='${pageContext.request.contextPath}/login'
@@ -31,6 +31,10 @@
 			<tr>
 				<td>Password:</td>
 				<td><input type='password' name='j_password' /></td>
+			</tr>
+			<tr>
+				<td>Remember me:</td>
+				<td><input type='checkbox' name='remember-me' checked="checked"/></td>
 			</tr>
 			<tr>
 				<td colspan='2'><input name="submit" type="submit"
