@@ -3,19 +3,20 @@ package com.dfs.spring.web.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import com.dfs.spring.web.dao.Offer;
-import com.dfs.spring.web.dao.OffersDAO;
+import com.dfs.spring.web.dao.OffersDao;
 
 @Service("offersService")
 public class OffersService {
 	
-	private OffersDAO offersDao;
+	private OffersDao offersDao;
 	
 	
 	@Autowired
-	public void setOffersDAO(OffersDAO offersDao) {
+	public void setOffersDAO(OffersDao offersDao) {
 		this.offersDao = offersDao;
 	}
 
@@ -24,7 +25,7 @@ public class OffersService {
 		return offersDao.getOffers();
 	}
 
-
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	public void create(Offer offer) {
 		offersDao.create(offer);
 	}
