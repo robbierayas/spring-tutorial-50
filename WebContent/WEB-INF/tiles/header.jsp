@@ -8,9 +8,11 @@
 		<a href="<c:url value="/login"/>" class="login">Login</a>
 </sec:authorize>
 <sec:authorize access="isAuthenticated()">
-	<c:url var="logoutUrl" value="/logout" />
+		<a href="<c:url value="/logout"/>" class="logout">Logout</a>
+	<!--<c:url var="logoutUrl" value="/logout" />
 	<form action="${logoutUrl}" method="post">
 		<input class="login" type="submit" value="Log out"/>
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	</form>
+	-->
 </sec:authorize>
