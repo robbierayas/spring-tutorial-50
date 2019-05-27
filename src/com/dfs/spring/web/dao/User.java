@@ -10,20 +10,23 @@ import com.dfs.spring.web.validation.ValidEmail;
 
 public class User {
 	
-	@NotBlank(message="Username cannot be blank.")
+	@NotBlank
 	@Size(min=8,max=15)
-	@Pattern(regexp="^\\w{8,}$", message="Username can only consist of numbers, letters,and ")
+	@Pattern(regexp="^\\w{8,}$")
 	private String username;
 
-	@NotBlank(message="Password cannot be blank.")
-	@Size(min=8,max=15, message="Password must be between 8 and 15 characters long.")
+	@NotBlank
+	@Size(min=8,max=15)
 	@Pattern(regexp="^\\S+$")
 	private String password;
 	private boolean enabled = false;
 	private String authority;
-	@ValidEmail(message="Not a valid email")
+	@ValidEmail
 	private String email;
 
+	@NotBlank
+	@Size(min=8,max=60)
+	private String name;
 	public User() {
 	}
 
@@ -35,9 +38,10 @@ public class User {
 		this.email = email;
 	}
 
-	public User(String username, String password, boolean enabled, String authority, String email) {
+	public User(String username, String name, String password, boolean enabled, String authority, String email) {
 		super();
 		this.username = username;
+		this.name=name;
 		this.password = password;
 		this.enabled = enabled;
 		this.authority = authority;
@@ -77,12 +81,19 @@ public class User {
 	}
 
 	@Override
+	public String toString() {
+		return "User [username=" + username + ", enabled=" + enabled + ", authority=" + authority + ", email=" + email
+				+ ", name=" + name + "]";
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((authority == null) ? 0 : authority.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + (enabled ? 1231 : 1237);
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -108,11 +119,25 @@ public class User {
 			return false;
 		if (enabled != other.enabled)
 			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
 		} else if (!username.equals(other.username))
 			return false;
 		return true;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	
 	}
 }
