@@ -1,5 +1,6 @@
 package com.dfs.spring.web.controllers;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -20,15 +21,15 @@ import com.dfs.spring.web.service.OffersService;
 
 @Controller
 public class OffersController {
-	
+
 	private OffersService offersService;
-	
+
 	@Autowired
 	public void setOffersService(OffersService offersService) {
 		this.offersService = offersService;
 	}
-	
-	@RequestMapping(value="/test", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String showTest(Model model, @RequestParam("id") String id) {
 		System.out.println("Id is: " + id);
 		return "home";
@@ -36,42 +37,61 @@ public class OffersController {
 
 	@RequestMapping("/offers")
 	public String showOffers(Model model) {
-		//Throw test database exception
-		//offersService.throwTestException();
-		
+		// Throw test database exception
+		// offersService.throwTestException();
+
 		List<Offer> offers = offersService.getCurrent();
-		
+
 		model.addAttribute("offers", offers);
-		
+
 		return "offers";
 	}
-	
-	@RequestMapping("/createoffer")
-	public String createOffer(Model model) {
 
-		model.addAttribute("offer", new Offer());
+	@RequestMapping("/createoffer")
+	public String createOffer(Model model, Principal principal) {
+		Offer offer = null;
+		if (principal != null) {
+			String username = principal.getName();
+
+			offer = offersService.getOffer(username);
+		}
+		if (offer == null) {
+			offer = new Offer();
+		}
+		model.addAttribute("offer", offer);
 		return "createoffer";
 	}
-	
-	@RequestMapping(value="/docreate", method=RequestMethod.POST)
-	public String doCreate(Model model,@Valid Offer offer, BindingResult result) {
-		if(result.hasErrors()) {
+
+	@RequestMapping(value = "/docreate", method = RequestMethod.POST)
+	public String doCreate(Model model, @Valid Offer offer, BindingResult result, Principal principal,
+			@RequestParam(value = "delete", required = false) String delete) {
+		if (result.hasErrors()) {
 			System.out.println("Form does not validate");
-			
+
 			List<ObjectError> errors = result.getAllErrors();
-			
-			for(ObjectError error:errors) {
+
+			for (ObjectError error : errors) {
 				System.out.println(error.getDefaultMessage());
 			}
 			return "createoffer";
-		}
-		else {
+		} else {
 			System.out.println("Form validated");
+			if(delete ==null) {
 
-			offersService.create(offer);
+				String username = principal.getName();
+
+				offer.getUser().setUsername(username);
+
+				offersService.saveOrUpdate(offer);
+				return "offercreated";
+			}else {
+
+				offersService.delete(offer.getId());
+				return "offerdeleted";
+			}
+//			offersService.create(offer);
 		}
-		
-		return "offercreated";
+
 	}
-	
+
 }
