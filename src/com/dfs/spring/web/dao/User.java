@@ -1,5 +1,10 @@
 package com.dfs.spring.web.dao;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -8,25 +13,30 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.dfs.spring.web.validation.ValidEmail;
 
+@Entity
+@Table(name = "users")
 public class User {
-	
-	@NotBlank
-	@Size(min=8,max=15)
-	@Pattern(regexp="^\\w{8,}$")
+
+	@NotBlank(groups = { PersistenceValidationGroup.class, FormValidationGroup.class })
+	@Size(min = 8, max = 15, groups = { PersistenceValidationGroup.class, FormValidationGroup.class })
+	@Pattern(regexp = "^\\w{8,}$", groups = { PersistenceValidationGroup.class, FormValidationGroup.class })
+	@Id
+	@Column(name = "username")
 	private String username;
 
-	@NotBlank
-	@Size(min=8,max=15)
-	@Pattern(regexp="^\\S+$")
+	@NotBlank(groups = { PersistenceValidationGroup.class, FormValidationGroup.class })
+	@Size(min = 8, max = 15, groups = {  FormValidationGroup.class })
+	@Pattern(regexp = "^\\S+$", groups = { PersistenceValidationGroup.class, FormValidationGroup.class })
 	private String password;
 	private boolean enabled = false;
 	private String authority;
-	@ValidEmail
+	@ValidEmail(groups = { PersistenceValidationGroup.class, FormValidationGroup.class })
 	private String email;
 
-	@NotBlank
-	@Size(min=8,max=60)
+	@NotBlank(groups = { PersistenceValidationGroup.class, FormValidationGroup.class })
+	@Size(min = 8, max = 60, groups = { PersistenceValidationGroup.class, FormValidationGroup.class })
 	private String name;
+
 	public User() {
 	}
 
@@ -41,7 +51,7 @@ public class User {
 	public User(String username, String name, String password, boolean enabled, String authority, String email) {
 		super();
 		this.username = username;
-		this.name=name;
+		this.name = name;
 		this.password = password;
 		this.enabled = enabled;
 		this.authority = authority;
@@ -138,6 +148,6 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
-	
+
 	}
 }
